@@ -1,7 +1,8 @@
 .vagrant
 package.box
 httpdocs
-magento-sample-data*.tar.gz
+*.tar.gz
+bootstrap-vars.sh
 
 # Numerous always-ignore extensions
 *.diff

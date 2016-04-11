@@ -1,6 +1,28 @@
 simple-magento-vagrant
 ======================
 
+# Site Dump
+
+To use this fork as a site dump for testing or debugging a mysterious production site, do the following:
+
+* Put the magento install tarball in the root folder and make sure the version matches.
+* Pull down the site database as an sql dump. Say the database is named foo and the outfile is foo.sql.
+* Pull down the /media and /skins directories as well.
+* Pull down the site's local.xml from /app/etc/local.xml
+* Put all that stuff into a foo-data directory.
+* Archive foo-data into a tarball, like ```tar cvzf foo-data.tar.gz foo-data```
+* Make a copy of bootstrap-vars-template.sh and modify variables in bootstrap-vars.sh with the data from the local.xml
+* If necessary, modify tweaks.sql in the vagrant root folder to modify data in the database, like the secure and unsecure host names.
+* Run ```vagrant up``` to create the vagrant box
+* Put the site's local.xml in httpdocs/app/etc/
+* Hit http://localhost:8080 to see if you win!
+* (If you get a numbered error, look in httpdocs/var/report/<number> to see what's up.)
+* TODO: modules and custom layouts won't work unless you also copy down the stuff in:
+/app/design/frontend/<design name> as well as /app/code/local and any modules loaded in /app/etc/modules 
+* Also any plugins will probably live in /app/code/community.
+
+# The Standard Stuff
+
 A VERY simple Magento environment provisioner for [Vagrant](http://www.vagrantup.com/).
 
 ![Magento & Vagrant](https://cookieflow.files.wordpress.com/2013/07/magento_vagrant.jpg?w=525&h=225)

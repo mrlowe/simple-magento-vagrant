@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 
 SAMPLE_DATA=$1
-MAGE_VERSION="1.9.1.0"
-DATA_VERSION="1.9.0.0"
+MAGE_VERSION="1.9.2.4"
+DATA_VERSION="1.9.1.0"
+DATA_FILE_NAME="magento-sample-data-1.9.1.0.tar.gz"
+DB_NAME="magento"
+DB_USER="magentouser"
+DB_PASS="password"
+source bootstrap-vars.sh
 
 # Update Apt
 # --------------------
@@ -57,8 +62,9 @@ export DEBIAN_FRONTEND=noninteractive
 # Install MySQL quietly
 apt-get -q -y install mysql-server-5.5
 
-mysql -u root -e "CREATE DATABASE IF NOT EXISTS magentodb"
-mysql -u root -e "GRANT ALL PRIVILEGES ON magentodb.* TO 'magentouser'@'localhost' IDENTIFIED BY 'password'"
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME}"
+mysql -u root -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO 'magentouser'@'localhost' IDENTIFIED BY 'password'"
+mysql -u root -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '{DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}'"
 mysql -u root -e "FLUSH PRIVILEGES"
 
 
@@ -69,7 +75,7 @@ mysql -u root -e "FLUSH PRIVILEGES"
 # Download and extract
 if [[ ! -f "/vagrant/httpdocs/index.php" ]]; then
   cd /vagrant/httpdocs
-  wget http://www.magentocommerce.com/downloads/assets/${MAGE_VERSION}/magento-${MAGE_VERSION}.tar.gz
+  #wget http://www.magentocommerce.com/downloads/assets/${MAGE_VERSION}/magento-${MAGE_VERSION}.tar.gz
   tar -zxvf magento-${MAGE_VERSION}.tar.gz
   mv magento/* magento/.htaccess .
   chmod -R o+w media var
@@ -83,16 +89,17 @@ fi
 if [[ $SAMPLE_DATA == "true" ]]; then
   cd /vagrant
 
-  if [[ ! -f "/vagrant/magento-sample-data-${DATA_VERSION}.tar.gz" ]]; then
+  #if [[ ! -f "/vagrant/magento-sample-data-${DATA_VERSION}.tar.gz" ]]; then
     # Only download sample data if we need to
-    wget http://www.magentocommerce.com/downloads/assets/${DATA_VERSION}/magento-sample-data-${DATA_VERSION}.tar.gz
-  fi
+    #wget http://www.magentocommerce.com/downloads/assets/${DATA_VERSION}/magento-sample-data-${DATA_VERSION}.tar.gz
+  #fi
 
-  tar -zxvf magento-sample-data-${DATA_VERSION}.tar.gz
-  cp -R magento-sample-data-${DATA_VERSION}/media/* httpdocs/media/
-  cp -R magento-sample-data-${DATA_VERSION}/skin/*  httpdocs/skin/
-  mysql -u root magentodb < magento-sample-data-${DATA_VERSION}/magento_sample_data_for_${DATA_VERSION}.sql
-  rm -rf magento-sample-data-${DATA_VERSION}
+  tar -zxvf ${DATA_FILE_NAME}.tar.gz
+  cp -R ${DATA_FILE_NAME}/media/* httpdocs/media/
+  cp -R ${DATA_FILE_NAME}/skin/*  httpdocs/skin/
+  mysql -u root ${DB_NAME} < ${DATA_FILE_NAME}/${DB_NAME}.sql
+  mysql -u root ${DB_NAME} < tweaks.sql
+  rm -rf ${DATA_FILE_NAME}
 fi
 
 
@@ -101,7 +108,7 @@ if [ ! -f "/vagrant/httpdocs/app/etc/local.xml" ]; then
   cd /vagrant/httpdocs
   sudo /usr/bin/php -f install.php -- --license_agreement_accepted yes \
   --locale en_US --timezone "America/Los_Angeles" --default_currency USD \
-  --db_host localhost --db_name magentodb --db_user magentouser --db_pass password \
+  --db_host localhost --db_name ${DB_NAME} --db_user ${DB_USER} --db_pass ${DB_PASS} \
   --url "http://127.0.0.1:8080/" --use_rewrites yes \
   --use_secure no --secure_base_url "http://127.0.0.1:8080/" --use_secure_admin no \
   --skip_url_validation yes \
