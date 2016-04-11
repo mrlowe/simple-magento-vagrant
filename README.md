@@ -20,6 +20,7 @@ To use this fork as a site dump for testing or debugging a mysterious production
 * TODO: modules and custom layouts won't work unless you also copy down the stuff in:
 /app/design/frontend/<design name> as well as /app/code/local and any modules loaded in /app/etc/modules 
 * Also any plugins will probably live in /app/code/community.
+* The site may need logs turned on in admin: System | Configuration | Developer | Log Settings | Yes
 
 # The Standard Stuff
 
