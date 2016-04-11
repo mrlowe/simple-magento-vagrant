@@ -3,11 +3,12 @@
 SAMPLE_DATA=$1
 MAGE_VERSION="1.9.2.4"
 DATA_VERSION="1.9.1.0"
-DATA_FILE_NAME="magento-sample-data-1.9.1.0.tar.gz"
+DATA_FILE_NAME="magento-sample-data-1.9.1.0"
 DB_NAME="magento"
 DB_USER="magentouser"
 DB_PASS="password"
-source bootstrap-vars.sh
+source /vagrant/bootstrap-vars.sh
+echo DB Name: ${DB_NAME}
 
 # Update Apt
 # --------------------
@@ -64,7 +65,7 @@ apt-get -q -y install mysql-server-5.5
 
 mysql -u root -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME}"
 mysql -u root -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO 'magentouser'@'localhost' IDENTIFIED BY 'password'"
-mysql -u root -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '{DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}'"
+mysql -u root -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'localhost' IDENTIFIED BY '${DB_PASS}'"
 mysql -u root -e "FLUSH PRIVILEGES"
 
 

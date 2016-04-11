@@ -5,7 +5,7 @@ simple-magento-vagrant
 
 To use this fork as a site dump for testing or debugging a mysterious production site, do the following:
 
-* Put the magento install tarball in the root folder and make sure the version matches.
+* Put the magento install tarball in a new httpdocs folder and make sure the version matches.
 * Pull down the site database as an sql dump. Say the database is named foo and the outfile is foo.sql.
 * Pull down the /media and /skins directories as well.
 * Pull down the site's local.xml from /app/etc/local.xml
