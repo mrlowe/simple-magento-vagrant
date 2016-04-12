@@ -21,6 +21,7 @@ To use this fork as a site dump for testing or debugging a mysterious production
 /app/design/frontend/<design name> as well as /app/code/local and any modules loaded in /app/etc/modules 
 * Also any plugins will probably live in /app/code/community.
 * The site may need logs turned on in admin: System | Configuration | Developer | Log Settings | Yes
+* And System | Configuration | Advanced | Disable Modules Output | Mage_Log | Enabled 
 
 # The Standard Stuff
 
